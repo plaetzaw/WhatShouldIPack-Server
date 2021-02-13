@@ -15,10 +15,16 @@ router.post('/search', async (req, res) => {
   let coldcount = 0
   let snowcount = 0
   let raincount = 0
-  const URL = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/${firstday}/${lastday}?key=${API_KEY}`
+
+  const first = firstday.slice(0, 10)
+  const last = lastday.slice(0, 10)
+
+  const URL = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/${first}/${last}?key=${API_KEY}`
 
   try {
     console.log('Beginning query')
+
+    console.log(location, first, last, coldtemp)
     const weather = await axios.get(URL)
     weather.data.days.forEach(e => {
       if (e.feelslike < coldtemp) {
