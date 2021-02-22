@@ -13,9 +13,10 @@ router.post('/search', async (req, res) => {
   const lastday = req.body.lastday
   const coldtemp = req.body.cold
   let coldcount = 0
+  let warmcount = 0
   let snowcount = 0
   let raincount = 0
-
+  let duration = 0
   const first = firstday.slice(0, 10)
   const last = lastday.slice(0, 10)
 
@@ -23,7 +24,6 @@ router.post('/search', async (req, res) => {
 
   try {
     console.log('Beginning query')
-
     console.log(location, first, last, coldtemp)
     const weather = await axios.get(URL)
     weather.data.days.forEach(e => {
@@ -37,11 +37,15 @@ router.post('/search', async (req, res) => {
         raincount++
       }
     })
+    const duration = (weather.data.days.length)
+    const warmcount = duration - coldcount
     const packingInfo = {
       weather: weather.data,
       coldcount,
+      warmcount,
       snowcount,
-      raincount
+      raincount,
+      duration
     }
     console.log(packingInfo)
     res.status(200).send(packingInfo)
